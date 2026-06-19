@@ -109,7 +109,7 @@ docs/
 
 **Objective:** Establish the first POC with a foundation and validate the basic security scanning tools like trivy, to understand how scanning works and how the vulnerability reports are read and comprehended. 
 
-[Sprint-01 README.md](https://github.com/Saima-Devops/)
+[Sprint-01 README.md](https://github.com/DevOps-Capstones/SecureGate-AI/tree/main/Sprint-01)
 
 -----
 
