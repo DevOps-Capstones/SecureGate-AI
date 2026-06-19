@@ -35,7 +35,7 @@ SecureGate AI is not only a Container Image Vulnerability Scanner, but it's a co
 
 ## How SecureGate AI Works?
 
-<img width="1408" height="768" alt="Gemini_Generated_Image_rb59a9rb59a9rb59" src="https://github.com/user-attachments/assets/dcb3b7f4-a4e8-4958-b9c8-49c8fa475e78" />
+<img width="1408" height="768" alt="Gemini_Generated_Image_rb59a9rb59a9rb59" src="https://github.com/DevOps-Capstones/SecureGate-AI/blob/main/images/Copilot_20260618_232523.png/>
 
 
 ---
