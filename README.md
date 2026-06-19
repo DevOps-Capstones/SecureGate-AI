@@ -143,7 +143,7 @@ docs/
 
 Security tools are operational and capable of scanning sample projects.
 
-[Sprint-01 README.md](https://github.com/DevOps-Capstones/SecureGate-AI/tree/main/Sprint-01)
+[Sprint-01 README.md](https://github.com/DevOps-Capstones/SecureGate-AI/blob/main/README.md)
 
 ----
 
