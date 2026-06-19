@@ -35,7 +35,8 @@ SecureGate AI is not only a Container Image Vulnerability Scanner, but it's a co
 
 ## How SecureGate AI Works?
 
-<img width="1408" height="768" alt="Gemini_Generated_Image_rb59a9rb59a9rb59" src="https://github.com/DevOps-Capstones/SecureGate-AI/blob/main/images/Copilot_20260618_232523.png/>
+<img width="1408" height="768" alt="image" src="https://github.com/user-attachments/assets/73c61f8b-1422-4707-9822-c1ae6cadf242" />
+
 
 
 ---
@@ -65,7 +66,8 @@ SecureGate AI is not only a Container Image Vulnerability Scanner, but it's a co
 3. If all security checks pass and the security score meets the approval criteria, the Docker image is pushed to Docker Hub, and
 4. A deployment approval report is generated, and notifications are sent via Slack and email.
 
-<img width="1536" height="1024" alt="Copilot_20260618_232530" src="https://github.com/user-attachments/assets/c4625020-0dd0-461a-b1a7-c179c2436967" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/2369b28a-14e7-4a41-baae-5dcbe08dd744" />
+
 
 ---
 
@@ -76,7 +78,7 @@ SecureGate AI is not only a Container Image Vulnerability Scanner, but it's a co
 3. The platform generates a detailed failure report with findings, remediation recommendations, and security improvement actions, and then
 4. Sends real-time alerts through Slack and email to notify the development and security teams.
 
-<img width="1536" height="1024" alt="Copilot_20260618_232523" src="https://github.com/user-attachments/assets/4af1ca5b-d850-4c18-b86f-59eb7116fcda" />
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/52fe02c3-8b7c-4eaf-bdfa-c68921508075" />
 
 ---
 
@@ -100,7 +102,7 @@ docs/
     └── README.md
 ```
 
-<img width="842" height="1264" alt="Gemini_Generated_Image_9buxrg9buxrg9bux" src="https://github.com/user-attachments/assets/422358d0-0510-445f-ba17-c8b08040868d" />
+<img width="842" height="1264" alt="image" src="https://github.com/user-attachments/assets/973c7c0e-b648-41ef-a1d7-745de74038be" />
 
 ---
 
@@ -305,7 +307,8 @@ prioritize remediation actions, and provide natural-language security recommenda
 
 # Technology Stack and Purpose
 
-<img width="946" height="1546" alt="tech-stack" src="https://github.com/user-attachments/assets/e642368b-0921-4514-8550-d048685dff42" />
+
+<img width="946" height="1546" alt="image" src="https://github.com/user-attachments/assets/69f5cfec-6d1f-43b9-8223-6235bc0123da" />
 
 
 
