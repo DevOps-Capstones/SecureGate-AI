@@ -109,7 +109,7 @@ docs/
 
 **Objective:** Establish the first POC with a foundation and validate the basic security scanning tools like trivy, to understand how scanning works and how the vulnerability reports are read and comprehended. 
 
-[Sprint-01 README.md](https://github.com/Saima-Devops/Image-Vulnerability-Scanner/blob/sprint-1/README.md)
+[Sprint-01 README.md](https://github.com/Saima-Devops/)
 
 -----
 
@@ -143,7 +143,7 @@ docs/
 
 Security tools are operational and capable of scanning sample projects.
 
-[Sprint-01 README.md](https://github.com/Saima-Devops/Image-Vulnerability-Scanner/blob/sprint-1/README.md)
+[Sprint-01 README.md](https://github.com/Saima-Devops/)
 
 ----
 
