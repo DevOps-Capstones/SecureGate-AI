@@ -166,8 +166,8 @@ Pull and scan some more images like alpine, nginx, python
 trivy image python:3.7
 ```
 
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/42fc63fd-fd66-4be6-bc75-3425e95fe76d" />
 
-![alt text](<screenshots/Screenshot 2026-06-05 at 12.49.52 AM.png>)
 
 
 > Older image. Likely many vulnerabilities.
