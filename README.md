@@ -83,7 +83,7 @@ SecureGate AI Dashboard
 ✅ Dashboard \
 ✅ Projects \
 ✅ Reports \
-✅ Settings \
+✅ Settings
 
 using dummy/mock data.
 
@@ -97,8 +97,6 @@ using dummy/mock data.
 ![alt text](Sprint01-Phase-02/screenshots/image4.png)
 
 ![alt text](Sprint01-Phase-02/screenshots/image5.png)
-
-![alt text](Sprint01-Phase-02/screenshots/image6.png)
 
 ----
 
@@ -211,17 +209,26 @@ GitLeaks:
 gitleaks detect .
 ```
 
+![alt text](Sprint01-Phase-02/screenshots/image13.png)
+
+
 Trivy filesystem scan:
 
 ```bash
 trivy fs .
 ```
 
+![alt text](Sprint01-Phase-02/screenshots/image14.png)
+
+
 Trivy image scan:
 
 ```bash
 trivy image python:3.7
 ```
+
+![alt text](Sprint01-Phase-02/screenshots/image15.png)
+
 ---
 
 ### For more Validation Check:
