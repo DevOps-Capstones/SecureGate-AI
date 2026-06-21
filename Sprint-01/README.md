@@ -1,6 +1,6 @@
 # Container Image Vulnerability Scanner with Reporting
 
-## Sprint 1: Initial Setup and Basic Vulnerability Scanning
+## Sprint 1: Initial Setup and Basic Vulnerability Scanning - PHASE-01
 
 Sprint 1 focuses on establishing the foundation of the project by:
 
