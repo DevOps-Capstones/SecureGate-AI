@@ -82,7 +82,7 @@ SecureGate AI is not only a Container Image Vulnerability Scanner, but it's a co
 
 ---
 
-## Project Execution - PHASE-01 
+## Project Execution
 
 This project will be divided into 6 sprints. Each sprint should have:
 
@@ -106,7 +106,7 @@ docs/
 
 ---
 
-## Sprint-01 (Initial Stage)
+## Sprint-01 (PHASE-01)
 ### Project Setup and Security Scanning Basics
 
 **Objective:** Establish the first POC with a foundation and validate the basic security scanning tools like trivy, to understand how scanning works and how the vulnerability reports are read and comprehended. 
@@ -115,7 +115,7 @@ docs/
 
 -----
 
-## Sprint-01 (Intermediate Stage)
+## Sprint-01 (PHASE-02)
 ## Project Setup and Security Scanner Foundation with Security Scanning Tools + Platform Initial Setup
 
 **Objective:** Establish the foundational environment for SecureGate AI and validate the security scanning tools.
