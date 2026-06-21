@@ -38,6 +38,9 @@ docker compose up -d --build
 
 running successfully.
 
+<img width="2512" height="1350" alt="image" src="https://github.com/user-attachments/assets/99b6886a-0b0c-4051-8222-111b494f84e5" />
+
+
 -----
 
 check:
@@ -87,16 +90,13 @@ SecureGate AI Dashboard
 
 using dummy/mock data.
 
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/8c4eb11c-d909-4ecf-83fc-8fb3d944a48c" />
 
-![alt text](Sprint01-Phase-02/screenshots/image1.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/406028a1-e776-4564-9494-4a2e5418a856" />
 
-![alt text](Sprint01-Phase-02/screenshots/image2.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/1373e2af-f17b-43ab-b526-fba1b0e801fe" />
 
-![alt text](Sprint01-Phase-02/screenshots/image3.png)
-
-![alt text](Sprint01-Phase-02/screenshots/image4.png)
-
-![alt text](Sprint01-Phase-02/screenshots/image5.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/24c5a937-bfa3-464a-86ec-0c178d0598b2" />
 
 ----
 
@@ -115,7 +115,8 @@ GET /
 GET /health
 ```
 
-![alt text](Sprint01-Phase-02/screenshots/image7.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/cec40c15-b254-45cd-9279-dc07d4a3b359" />
+
 
 
 ---
@@ -131,7 +132,8 @@ http://localhost:3000
 ✅ No real dashboards yet. \
 ✅ Only setup completed.
 
-![alt text](Sprint01-Phase-02/screenshots/image8.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/e7c426b6-557b-44d2-9a12-83072aa019ad" />
+
 
 ----
 
@@ -147,7 +149,8 @@ http://localhost:9090
 ✅ Just working.
 
 
-![alt text](Sprint01-Phase-02/screenshots/image9.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/a465df12-7a53-4c1b-a9d6-ab7fa4669943" />
+
 
 ----
 
@@ -179,7 +182,8 @@ Coverage: 78%
 ```
 
 
-![alt text](Sprint01-Phase-02/screenshots/image10.png)
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/6b3c4cf2-335e-45e4-b90f-2bc21e6fbddf" />
+
 
 ----
 
@@ -196,7 +200,8 @@ You can verify:
 SELECT * FROM projects;
 ```
 
-![alt text](Sprint01-Phase-02/screenshots/image12.png)
+<img width="2272" height="1242" alt="image" src="https://github.com/user-attachments/assets/f848cc44-2ed4-471f-a84e-d1b757f2f09c" />
+
 
 ----
 
@@ -209,7 +214,8 @@ GitLeaks:
 gitleaks detect .
 ```
 
-![alt text](Sprint01-Phase-02/screenshots/image13.png)
+<img width="1774" height="788" alt="image" src="https://github.com/user-attachments/assets/3f68bff6-89d0-4a37-b6c0-6dde57fa0f14" />
+
 
 
 Trivy filesystem scan:
@@ -218,7 +224,8 @@ Trivy filesystem scan:
 trivy fs .
 ```
 
-![alt text](Sprint01-Phase-02/screenshots/image14.png)
+<img width="2480" height="798" alt="image" src="https://github.com/user-attachments/assets/5a66b70b-8485-48d0-bded-d8f139f92c6a" />
+
 
 
 Trivy image scan:
@@ -227,7 +234,8 @@ Trivy image scan:
 trivy image python:3.7
 ```
 
-![alt text](Sprint01-Phase-02/screenshots/image15.png)
+<img width="2494" height="910" alt="image" src="https://github.com/user-attachments/assets/2d44fe63-bea7-4821-92d0-9bdbf9c4eb22" />
+
 
 ---
 
