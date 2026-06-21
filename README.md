@@ -4,7 +4,7 @@ Enterprise DevSecOps Security Orchestration Platform.
 
 This repository contains the Sprint 1 foundation for SecureGate AI. Sprint 1 validates the core platform services and manual security tools only.
 
-## Sprint-1 (Pjase-02) Scope
+## Sprint-1 (Phase-02) Scope
 
 Included:
 
@@ -29,12 +29,12 @@ docker compose up -d --build
 
 **you should see:**
 
-✅ Frontend
-✅ Backend
-✅ PostgreSQL
-✅ SonarQube
-✅ Prometheus
-✅ Grafana
+✅ Frontend \
+✅ Backend \
+✅ PostgreSQL \
+✅ SonarQube \
+✅ Prometheus \
+✅ Grafana 
 
 running successfully.
 
@@ -45,7 +45,7 @@ check:
 - Frontend: http://localhost:5173
 - Backend: http://localhost:8000
 - Backend health: http://localhost:8000/health
-- PostgreSQL: localhost:5432
+- PostgreSQL: http://localhost:5432
 - SonarQube: http://localhost:9000
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000
@@ -80,25 +80,25 @@ http://localhost:5173
 You should see:
 SecureGate AI Dashboard
 
-✅ Dashboard
-✅ Projects
-✅ Reports
-✅ Settings
+✅ Dashboard \
+✅ Projects \
+✅ Reports \
+✅ Settings \
 
 using dummy/mock data.
 
 
-![alt text](screenshots/image1.png)
+![alt text](Sprint01-Phase-02/screenshots/image1.png)
 
-![alt text](screenshots/image2.png)
+![alt text](Sprint01-Phase-02/screenshots/image2.png)
 
-![alt text](screenshots/image3.png)
+![alt text](Sprint01-Phase-02/screenshots/image3.png)
 
-![alt text](screenshots/image4.png)
+![alt text](Sprint01-Phase-02/screenshots/image4.png)
 
-![alt text](screenshots/image5.png)
+![alt text](Sprint01-Phase-02/screenshots/image5.png)
 
-![alt text](screenshots/image6.png)
+![alt text](Sprint01-Phase-02/screenshots/image6.png)
 
 ----
 
@@ -117,7 +117,7 @@ GET /
 GET /health
 ```
 
-![alt text](screenshots/image7.png)
+![alt text](Sprint01-Phase-02/screenshots/image7.png)
 
 
 ---
@@ -129,11 +129,11 @@ Open:
 http://localhost:3000
 ```
 
-✅ Login works.
-✅ No real dashboards yet.
+✅ Login works. \
+✅ No real dashboards yet. \
 ✅ Only setup completed.
 
-![alt text](screenshots/image8.png)
+![alt text](Sprint01-Phase-02/screenshots/image8.png)
 
 ----
 
@@ -144,12 +144,12 @@ Open:
 http://localhost:9090
 ```
 
-✅ Prometheus is collecting metrics.
-✅ Nothing exciting yet.
+✅ Prometheus is collecting metrics. \
+✅ Nothing exciting yet. \
 ✅ Just working.
 
 
-![alt text](screenshots/image9.png)
+![alt text](Sprint01-Phase-02/screenshots/image9.png)
 
 ----
 
@@ -162,9 +162,9 @@ http://localhost:9000
 
 You can:
 
-✅ Login
-✅ Create a project
-✅ Generate token
+✅ Login \
+✅ Create a project \
+✅ Generate token \
 ✅ Scan a test repository
 
 
@@ -181,26 +181,24 @@ Coverage: 78%
 ```
 
 
-![alt text](screenshots/image10.png)
-
-![alt text](screenshots/image11.png)
+![alt text](Sprint01-Phase-02/screenshots/image10.png)
 
 ----
 
 ## PostgreSQL
 
-✅ Database running.
-✅ Tables exist:
-✅ projects
-✅ scans
-✅ reports
+✅ Database running. \
+✅ Tables exist: \
+    ✅ projects \
+    ✅ scans \
+    ✅ reports
 
 You can verify:
 ```
 SELECT * FROM projects;
 ```
 
-![alt text](screenshots/image12.png)
+![alt text](Sprint01-Phase-02/screenshots/image12.png)
 
 ----
 
@@ -228,7 +226,9 @@ trivy image python:3.7
 
 ### For more Validation Check:
 
-`docs/sprint-1/Tool-Validation.md`, `scanners/gitleaks/README.md`, and `scanners/trivy/README.md` for detailed validation steps.
+`docs/sprint-1/Tool-Validation.md`, \
+`scanners/gitleaks/README.md`, and \
+`scanners/trivy/README.md` for detailed validation steps.
 
 ---
 
