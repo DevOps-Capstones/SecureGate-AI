@@ -15,12 +15,12 @@ cd /Users/saimausman/Desktop/securegate-ai
 docker compose up -d --build
 ```
 
-Frontend: http://localhost:5173  
-Backend and Swagger: http://localhost:8000 and http://localhost:8000/docs  
-PostgreSQL: localhost:5432  
-SonarQube: http://localhost:9000  
-Prometheus: http://localhost:9090  
-Grafana: http://localhost:3000
+- Frontend: http://localhost:5173  
+- Backend and Swagger: http://localhost:8000 and http://localhost:8000/docs  
+- PostgreSQL: localhost:5432  
+- SonarQube: http://localhost:9000  
+- Prometheus: http://localhost:9090  
+- Grafana: http://localhost:3000
 
 
 <img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/3ad0f3b7-b54f-4339-8dec-44dd62310cc0" />
@@ -75,6 +75,37 @@ cd frontend && npm run build
 
 -----
 
-Sprint 2 excludes scanner execution, CI workflow files, Jenkins, scoring, recommendations, generated reports, notifications, and AI features.
+## What has Sprint 2 built?
+
+✅ Report Upload API \
+✅ Scan ID Generation \
+✅ Database Storage \
+✅ Dashboard Scan History \
+✅ Report Normalization Layer
+
+
+Built **SecureGate-AI** APIs to receive reports.
+
+POST /scans
+POST /gitleaks-report
+POST /trivy-report
+POST /sonarqube-report
+
+**Simulate what GitHub Actions/Jenkins Pipeline will eventually do at later stages.**
+
+Let's manually do:
+
+```
+Postman
+     ↓
+SecureGate AI
+```
+
+and verify:
+
+✅ Scan is created \
+✅ Reports are uploaded \
+✅ Findings are stored \
+✅ Dashboard updates
 
 -------
