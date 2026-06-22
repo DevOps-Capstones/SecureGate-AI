@@ -1,0 +1,104 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: securegate-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_APP_NAME=SecureGate AI
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - securegate-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: securegate-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=SecureGate AI
+      - APP_VERSION=0.1.0
+      - DATABASE_URL=postgresql://securegate:securegate_password@postgres:5432/securegate
+      - SCAN_WORKSPACE_ROOT=/tmp/securegate-ai-scans
+      - SCAN_TIMEOUT_SECONDS=600
+    depends_on:
+      - postgres
+    networks:
+      - securegate-network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: securegate-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=securegate
+      - POSTGRES_USER=securegate
+      - POSTGRES_PASSWORD=securegate_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - securegate-network
+
+  sonarqube:
+    image: sonarqube:10.6-community
+    container_name: securegate-sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube-data:/opt/sonarqube/data
+      - sonarqube-extensions:/opt/sonarqube/extensions
+      - sonarqube-logs:/opt/sonarqube/logs
+    networks:
+      - securegate-network
+
+  prometheus:
+    image: prom/prometheus:v2.53.1
+    container_name: securegate-prometheus
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - securegate-network
+
+  grafana:
+    image: grafana/grafana:11.1.3
+    container_name: securegate-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    networks:
+      - securegate-network
+
+networks:
+  securegate-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  sonarqube-data:
+  sonarqube-extensions:
+  sonarqube-logs:
+  prometheus-data:
+  grafana-data:

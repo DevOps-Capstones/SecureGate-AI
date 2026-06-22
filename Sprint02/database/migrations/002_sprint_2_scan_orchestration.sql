@@ -1,0 +1,30 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS repository_url TEXT;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS deployment_approved BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS started_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS critical_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS high_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS medium_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS low_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS secrets_count INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE scans ALTER COLUMN project_id DROP NOT NULL;
+
+CREATE TABLE IF NOT EXISTS scan_findings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    scan_pk UUID NOT NULL REFERENCES scans(id) ON DELETE CASCADE,
+    scanner_type VARCHAR(50) NOT NULL,
+    severity VARCHAR(50) NOT NULL,
+    file_path TEXT,
+    line_number INTEGER,
+    title TEXT,
+    description TEXT,
+    vulnerability_id VARCHAR(100),
+    raw_data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_scans_scan_id ON scans(scan_id);
+CREATE INDEX IF NOT EXISTS idx_scans_started_at ON scans(started_at);
+CREATE INDEX IF NOT EXISTS idx_scan_findings_scan_pk ON scan_findings(scan_pk);
