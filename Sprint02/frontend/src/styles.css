@@ -450,3 +450,54 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.compact-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 0.5fr) 1fr;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e6ece8;
+}
+
+.compact-row:last-child {
+  border-bottom: 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.scan-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.status-text.received {
+  color: #315e52;
+}
+
+.status-text.processing {
+  color: #665000;
+}
+
+.status-text.completed,
+.status-text.uploaded {
+  color: #15503b;
+}
+
+@media (max-width: 820px) {
+  .dashboard-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

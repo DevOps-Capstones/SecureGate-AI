@@ -28,7 +28,7 @@ function App() {
           <ShieldCheck size={28} />
           <div>
             <strong>SecureGate AI</strong>
-            <span>Scan orchestration</span>
+            <span>Report ingestion</span>
           </div>
         </div>
         <nav className="navigation">
@@ -44,7 +44,7 @@ function App() {
         </nav>
         <div className="sidebar-footer">
           <BarChart3 size={18} />
-          <span>Sprint 2 automation</span>
+          <span>Sprint 2 ingestion</span>
         </div>
       </aside>
 

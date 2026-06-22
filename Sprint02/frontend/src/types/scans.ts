@@ -1,38 +1,52 @@
 export interface ScanSummary {
   scan_id: string;
+  project_name: string;
   repository_url: string;
+  branch: string;
+  commit_sha: string;
   status: string;
-  deployment_approved: boolean;
-  started_at: string;
+  received_at: string;
   completed_at: string | null;
-  critical_count: number;
-  high_count: number;
-  medium_count: number;
-  low_count: number;
-  secrets_count: number;
+}
+
+export interface ToolReport {
+  tool_name: string;
+  status: string;
+  uploaded_at: string;
 }
 
 export interface Finding {
-  scanner_type: string;
+  tool: string;
   severity: string;
-  file_path: string | null;
-  line_number: number | null;
-  title: string | null;
+  title: string;
   description: string | null;
-  vulnerability_id: string | null;
+  file: string | null;
+  source_tool: string;
 }
 
 export interface ScanDetails extends ScanSummary {
-  gitleaks_findings: Finding[];
-  trivy_findings: Finding[];
+  uploaded_reports: ToolReport[];
+  finding_counts: Record<string, number>;
+  tool_status: Record<string, string>;
+  findings: Finding[];
+}
+
+export interface CreateScanRequest {
+  project_name: string;
+  repository_url: string;
+  branch: string;
+  commit_sha: string;
 }
 
 export interface CreateScanResponse {
   scan_id: string;
   status: string;
-  deployment_approved: boolean;
-  critical_count: number;
-  high_count: number;
-  medium_count: number;
-  secrets_count: number;
+}
+
+export interface DashboardSummary {
+  total_projects: number;
+  total_scans: number;
+  recent_scans: ScanSummary[];
+  latest_uploads: ToolReport[];
+  most_recent_findings: Finding[];
 }

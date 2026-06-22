@@ -8,7 +8,7 @@ from app.routers import health, root, scans
 app = FastAPI(
     title=settings.app_name,
     version=settings.app_version,
-    description="SecureGate AI API for DevSecOps scan orchestration.",
+    description="SecureGate AI API for ingesting and normalizing CI/CD security reports.",
 )
 
 app.add_middleware(

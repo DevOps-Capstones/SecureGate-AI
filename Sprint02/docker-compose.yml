@@ -23,10 +23,8 @@ services:
       - "8000:8000"
     environment:
       - APP_NAME=SecureGate AI
-      - APP_VERSION=0.1.0
+      - APP_VERSION=0.2.0
       - DATABASE_URL=postgresql://securegate:securegate_password@postgres:5432/securegate
-      - SCAN_WORKSPACE_ROOT=/tmp/securegate-ai-scans
-      - SCAN_TIMEOUT_SECONDS=600
     depends_on:
       - postgres
     networks:

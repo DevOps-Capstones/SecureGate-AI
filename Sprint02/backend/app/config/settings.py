@@ -5,8 +5,6 @@ class Settings(BaseSettings):
     app_name: str = "SecureGate AI"
     app_version: str = "0.2.0"
     database_url: str = "postgresql://securegate:securegate_password@localhost:5432/securegate"
-    scan_workspace_root: str = "/tmp/securegate-ai-scans"
-    scan_timeout_seconds: int = 600
     cors_origins: list[str] = [
         "http://localhost:5173",
         "http://127.0.0.1:5173",

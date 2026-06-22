@@ -1,13 +1,13 @@
 # Database
 
-Sprint 1 uses PostgreSQL with an initial schema for projects, scans, and reports.
+PostgreSQL stores projects, scan history, raw tool reports, normalized findings, and audit events.
 
-The migration in `migrations/001_initial_schema.sql` is mounted into the PostgreSQL container at startup through Docker Compose.
+- `001_initial_schema.sql`: complete schema for fresh installations
+- `002_sprint_2_report_ingestion.sql`: idempotent Sprint 1 upgrade
 
-Connection defaults:
+```bash
+docker compose exec -T postgres psql -U securegate -d securegate < database/migrations/002_sprint_2_report_ingestion.sql
+docker compose restart backend
+```
 
-- Host: `localhost`
-- Port: `5432`
-- Database: `securegate`
-- Username: `securegate`
-- Password: `securegate_password`
+Fresh volumes run migrations automatically. Defaults: `localhost:5432`, database/user `securegate`, password `securegate_password`.

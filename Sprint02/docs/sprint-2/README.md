@@ -1,113 +1,42 @@
-# Sprint 2 Documentation
+# Sprint 2: Report Ingestion Platform
 
-Sprint 2 transforms SecureGate AI from manually validated services into an automated repository scan orchestration platform.
-
-## Implemented Features
-
-- Repository URL submission through `POST /api/v1/scans`
-- Unique scan ID generation using `SCAN-YYYYMMDD-XXXX`
-- Temporary repository cloning with Git
-- GitLeaks secret scan execution through subprocess
-- Trivy filesystem vulnerability scan execution through subprocess
-- Security gate approval logic
-- PostgreSQL persistence for scan metadata and findings
-- Recent scans API for dashboard widgets
-- Scan details API
-- React dashboard integration
-- React scan details page
-- React repository submission form
-- Swagger request and response models
-
-## Security Gate
-
-Deployment is approved only when:
-
-- GitLeaks findings count is zero
-- Trivy critical vulnerability count is zero
-
-Deployment is blocked when:
-
-- Any secret is detected
-- Any critical vulnerability is detected
-
-## API Endpoints
-
-### POST /api/v1/scans
-
-Request:
-
-```json
-{
-  "repository_url": "https://github.com/org/project"
-}
-```
-
-Response:
-
-```json
-{
-  "scan_id": "SCAN-20260622-0001",
-  "status": "PASSED",
-  "deployment_approved": true,
-  "critical_count": 0,
-  "high_count": 3,
-  "medium_count": 8,
-  "secrets_count": 0
-}
-```
-
-### GET /api/v1/scans
-
-Returns recent scan summaries for the dashboard.
-
-### GET /api/v1/scans/{scan_id}
-
-Returns scan metadata, GitLeaks findings, Trivy findings, and deployment status.
-
-## Database Changes
-
-Sprint 2 extends `scans` with:
-
-- `repository_url`
-- `deployment_approved`
-- `started_at`
-- `completed_at`
-- `critical_count`
-- `high_count`
-- `medium_count`
-- `low_count`
-- `secrets_count`
-
-Sprint 2 adds `scan_findings` for storing GitLeaks and Trivy findings.
-
-Migration file:
+Sprint 2 receives GitLeaks, Trivy filesystem, Trivy image, and SonarQube JSON reports produced by GitHub Actions. SecureGate AI stores original payloads, normalizes findings, tracks scan status, and displays scan history.
 
 ```text
-database/migrations/002_sprint_2_scan_orchestration.sql
+Create scan (RECEIVED) -> Upload JSON (PROCESSING) -> Store and normalize -> COMPLETED
 ```
 
-The backend also runs idempotent startup schema checks so existing Sprint 1 database volumes can be upgraded safely.
+An ingestion error creates an audit event and marks the scan `FAILED`.
 
-## Testing Checklist
+## Endpoints
 
-- `GET /health` returns healthy.
-- `GET /docs` shows scan endpoints.
-- `POST /api/v1/scans` clones a public repository.
-- GitLeaks runs and stores findings.
-- Trivy filesystem scan runs and stores findings.
-- Deployment is blocked when secrets or critical vulnerabilities exist.
-- Dashboard shows recent scans.
-- Projects page submits repository URLs.
-- Scan details page shows stored findings.
+- `POST /api/v1/scans`
+- `POST /api/v1/scans/{scan_id}/gitleaks`
+- `POST /api/v1/scans/{scan_id}/trivy-fs`
+- `POST /api/v1/scans/{scan_id}/trivy-image`
+- `POST /api/v1/scans/{scan_id}/sonarqube`
+- `GET /api/v1/scans`
+- `GET /api/v1/scans/{scan_id}`
+- `GET /api/v1/scans/dashboard/summary`
 
-## Out of Scope
+Create-scan request:
 
-- Jenkins integration
-- GitHub Actions workflow files
-- SonarQube execution
-- Docker image build
-- Trivy image scan
-- Report file generation
-- Slack or email notifications
-- AI recommendation layer
-- Security score formula
+```json
+{
+  "project_name": "payment-service",
+  "repository_url": "https://github.com/company/payment-service",
+  "branch": "main",
+  "commit_sha": "abc123"
+}
+```
+
+## Migration
+
+```bash
+docker compose exec -T postgres psql -U securegate -d securegate < database/migrations/002_sprint_2_report_ingestion.sql
+docker compose restart backend
+```
+
+Validate by creating a scan, uploading one report to every tool endpoint, checking raw and normalized database records, and opening the dashboard and scan details page. Swagger provides request and response examples.
+
+No scanner execution, workflow files, scoring, recommendations, report generation, notifications, Jenkins, or AI features are included.

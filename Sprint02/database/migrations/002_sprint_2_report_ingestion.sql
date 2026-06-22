@@ -1,33 +1,14 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE IF NOT EXISTS projects (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(255) NOT NULL,
-    repository_url TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS scans (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    scan_id VARCHAR(100) NOT NULL UNIQUE,
-    project_id UUID REFERENCES projects(id) ON DELETE SET NULL,
-    project_name VARCHAR(255) NOT NULL,
-    repository_url TEXT NOT NULL,
-    branch VARCHAR(255) NOT NULL DEFAULT 'main',
-    commit_sha VARCHAR(255) NOT NULL,
-    status VARCHAR(50) NOT NULL DEFAULT 'RECEIVED',
-    received_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    completed_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE TABLE IF NOT EXISTS reports (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    scan_id UUID NOT NULL REFERENCES scans(id) ON DELETE CASCADE,
-    report_type VARCHAR(100) NOT NULL,
-    file_path TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS project_name VARCHAR(255);
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS repository_url TEXT;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS branch VARCHAR(255) NOT NULL DEFAULT 'main';
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS commit_sha VARCHAR(255) NOT NULL DEFAULT 'unknown';
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS received_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS completed_at TIMESTAMPTZ;
+ALTER TABLE scans ALTER COLUMN project_id DROP NOT NULL;
+UPDATE scans SET project_name = COALESCE(project_name, repository_url, 'unknown-project') WHERE project_name IS NULL;
+ALTER TABLE scans ALTER COLUMN project_name SET NOT NULL;
 
 CREATE TABLE IF NOT EXISTS tool_reports (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -61,10 +42,8 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_scans_project_id ON scans(project_id);
 CREATE INDEX IF NOT EXISTS idx_scans_scan_id ON scans(scan_id);
 CREATE INDEX IF NOT EXISTS idx_scans_received_at ON scans(received_at);
-CREATE INDEX IF NOT EXISTS idx_reports_scan_id ON reports(scan_id);
 CREATE INDEX IF NOT EXISTS idx_tool_reports_scan_pk ON tool_reports(scan_pk);
 CREATE INDEX IF NOT EXISTS idx_findings_scan_pk ON findings(scan_pk);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_scan_pk ON audit_logs(scan_pk);

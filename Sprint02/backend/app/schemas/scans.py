@@ -1,54 +1,79 @@
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
 class ScanCreate(BaseModel):
-    repository_url: str = Field(
-        ...,
-        examples=["https://github.com/org/project"],
-        description="Git repository URL to clone and scan.",
-    )
+    project_name: str = Field(..., examples=["payment-service"])
+    repository_url: str = Field(..., examples=["https://github.com/company/payment-service"])
+    branch: str = Field(default="main", examples=["main"])
+    commit_sha: str = Field(..., examples=["abc123"])
 
 
 class ScanCreateResponse(BaseModel):
-    scan_id: str = Field(examples=["SCAN-20260622-0001"])
-    status: str = Field(examples=["PASSED"])
-    deployment_approved: bool = Field(examples=[True])
-    critical_count: int = Field(examples=[0])
-    high_count: int = Field(examples=[3])
-    medium_count: int = Field(examples=[8])
-    secrets_count: int = Field(examples=[0])
+    scan_id: str = Field(examples=["SCAN-20260701-0001"])
+    status: str = Field(examples=["RECEIVED"])
+
+
+class ToolReportUploadResponse(BaseModel):
+    scan_id: str
+    tool: str
+    status: str
+    findings_count: int
+    uploaded_at: datetime
 
 
 class FindingResponse(BaseModel):
-    scanner_type: str
+    tool: str
     severity: str
-    file_path: str | None = None
-    line_number: int | None = None
-    title: str | None = None
+    title: str
     description: str | None = None
-    vulnerability_id: str | None = None
+    file: str | None = None
+    source_tool: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ToolReportResponse(BaseModel):
+    tool_name: str
+    status: str
+    uploaded_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class ScanSummary(BaseModel):
     scan_id: str
+    project_name: str
     repository_url: str
+    branch: str
+    commit_sha: str
     status: str
-    deployment_approved: bool
-    started_at: datetime
+    received_at: datetime
     completed_at: datetime | None = None
-    critical_count: int
-    high_count: int
-    medium_count: int
-    low_count: int
-    secrets_count: int
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class ScanDetailsResponse(ScanSummary):
-    gitleaks_findings: list[FindingResponse]
-    trivy_findings: list[FindingResponse]
+    uploaded_reports: list[ToolReportResponse]
+    finding_counts: dict[str, int]
+    tool_status: dict[str, str]
+    findings: list[FindingResponse]
+
+
+class DashboardSummaryResponse(BaseModel):
+    total_projects: int
+    total_scans: int
+    recent_scans: list[ScanSummary]
+    latest_uploads: list[ToolReportResponse]
+    most_recent_findings: list[FindingResponse]
+
+
+class ToolReportPayload(BaseModel):
+    payload: dict[str, Any] = Field(
+        ...,
+        description="Raw JSON report produced by GitHub Actions for the selected tool.",
+        examples=[{"Results": []}],
+    )
