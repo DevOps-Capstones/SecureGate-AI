@@ -23,6 +23,11 @@ The objective of this project is to build an automated Container Image Vulnerabi
    - Enforce deployment approval policies
    - Provide centralized visibility through dashboards
 
+
+## Final Objective of the Project
+
+<img width="864" height="1821" alt="capstone-AD" src="https://github.com/user-attachments/assets/32428cc7-2e83-4643-bbb2-73dff32075b9" />
+
 ----
 
 ## Elevator Pitch:
