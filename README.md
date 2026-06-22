@@ -50,6 +50,9 @@ Create metadata with `POST /api/v1/scans`. Upload vendor JSON through:
 
 <img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/03ace0f9-e4bf-46cc-8fcd-9668773dfdf1" />
 
+<img width="2560" height="1394" alt="image" src="https://github.com/user-attachments/assets/33822818-b1f1-4593-b125-dfefc80ad195" />
+
+
 
 ----
 
