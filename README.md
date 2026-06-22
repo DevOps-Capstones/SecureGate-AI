@@ -112,3 +112,9 @@ and verify:
 ✅ Dashboard updates
 
 -------
+
+## Summary
+
+Sprint 2 receives GitLeaks, Trivy filesystem, Trivy image, and SonarQube JSON reports produced by GitHub Actions. SecureGate AI stores original payloads, normalizes findings, tracks scan status, and displays scan history.
+
+------
