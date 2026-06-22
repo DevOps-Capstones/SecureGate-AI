@@ -1,1 +1,0 @@
-"""SecureGate AI backend package."""
