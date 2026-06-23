@@ -171,11 +171,11 @@ Github Action, Scanner execution, CI workflow files, Integration with Jenkins, n
 
 What we have done so far!
 
-✅ Sprint 1 is completed
-✅ Sprint 2 is completed
-✅ Sprint 3 is completed
-✅ Architecture is LOCKED
-✅ SecureGate AI is now a Security Aggregation & Governance Platform
+✅ Sprint 1 is completed \
+✅ Sprint 2 is completed \
+✅ Sprint 3 is completed \
+✅ Architecture is LOCKED \
+✅ SecureGate AI is now a Security Aggregation & Governance Platform \
 ✅ Reports are stored under:
 ```
 storage/scans/<scan_id>/
