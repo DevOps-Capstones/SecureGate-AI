@@ -36,11 +36,128 @@ Export endpoints are documented at `http://localhost:8000/docs` under `reports`.
 
 <img width="1132" height="1538" alt="image" src="https://github.com/user-attachments/assets/937764ca-753a-4033-8300-08210ff43465" />
 
-
 ----
+
+## Simulate what GitHub Actions will eventually do.
+
+Instead of:
+
+```
+GitHub Actions
+    ↓
+SecureGate AI
+```
+
+let's manually do:
+
+```
+Postman
+    ↓
+SecureGate AI
+```
+
+and verify:
+
+- Scan is created
+- Reports are uploaded
+- Findings are stored
+- Dashboard updates
+
+### Swagger is Running:
+
+<img width="2538" height="1186" alt="image" src="https://github.com/user-attachments/assets/2e04d7bc-c692-4c76-b6d7-86bfd28584dd" />
+
+### Try all the APIs calling with Postman
+
+<img width="1280" height="357" alt="Screenshot 2026-06-23 at 2 36 56 PM" src="https://github.com/user-attachments/assets/be5a7b42-7b83-48a6-a94d-7a1c0717eac5" />
+
+-----
+
+For local testing, I have created some temporary artificates that Githib Actions will genrate during a pipeline run. After Sprint 04 Githib Actions will generate these reports dynamically.
+
+```
+securegate-ai/
+├── reports/
+│   └── samples/
+│       ├── gitleaks-report.json
+│       ├── trivy-fs-report.json
+│       ├── trivy-image-report.json
+│      └── sonarqube-report.json
+```
+
+After sprint 4 the reports will be stored in:
+
+```
+storage/
+└── scans/
+└── SCAN-20260701-0001/
+├── gitleaks-report.json
+├── trivy-fs-report.json
+├── trivy-image-report.json
+└── sonarqube-report.json 
+```
+
+
+### Create Sample GitLeaks Report
+
+Create:
+
+```yaml
+{
+ "tool": "gitleaks",
+ "findings": [
+   {
+     "rule": "AWS Access Key",
+     "file": "config.env",
+     "line": 12,
+     "severity": "CRITICAL"
+   }
+ ]
+}
+```
+
+Save as:
+```
+gitleaks-report.json
+```
+
+### Upload GitLeaks Report
+
+Request:
+
+```
+POST /api/v1/scans/SCAN-20260701-0001/gitleaks
+```
+
+Body:
+
+```
+{
+ "tool": "gitleaks",
+ "findings": [
+   {
+     "rule": "AWS Access Key",
+     "file": "config.env",
+     "line": 12,
+     "severity": "CRITICAL"
+   }
+]
+} 
+```
+
+Expected:
+```
+{
+ "status": "uploaded"
+}
+```
+
+
+
+-----
 
 ## Future Implementations
 
-Scanner execution, CI workflow files, Jenkins, notifications, LLM recommendations, and monitoring dashboards.
+Github Action, Scanner execution, CI workflow files, Integration with Jenkins, notifications, LLM recommendations, and monitoring dashboards.
 
 ---
