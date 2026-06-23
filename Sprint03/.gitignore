@@ -1,0 +1,86 @@
+# SecureGate AI - Sprint 3
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# FastAPI / backend runtime
+backend/.env
+backend/.venv/
+backend/venv/
+backend/__pycache__/
+backend/app/**/__pycache__/
+backend/tests/**/__pycache__/
+
+# Node / React
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.env
+frontend/.env.*
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker / local volumes
+docker/.env
+docker-data/
+postgres-data/
+grafana-data/
+prometheus-data/
+sonarqube-data/
+sonarqube-logs/
+sonarqube-extensions/
+
+# Generated Sprint 3 reports
+reports/generated/
+reports/exports/
+reports/*.pdf
+reports/*.docx
+reports/*.json
+
+# Temporary scan/report files
+tmp/
+temp/
+*.tmp
+*.temp
+scan-workspace/
+uploads/
+backend/uploads/
+backend/tmp/
+backend/reports/generated/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test/build artifacts
+coverage/
+dist/
+build/
+.cache/
