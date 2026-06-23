@@ -1,4 +1,4 @@
-## Securegate AI Sprint 3
+## SecureGate AI Sprint 3
 
 Sprint 3 calculates a 0-100 security score, records `APPROVED` or `REJECTED` deployment decisions, generates prioritized rule-based recommendations, and stores a canonical master report. Reports are available as PDF, DOCX, and JSON, with 12-month history filters in the dashboard.
 
