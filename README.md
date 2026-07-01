@@ -127,6 +127,9 @@ Use `Projects -> Register your project` in the frontend, then choose one runner:
 
 <img width="2560" height="1504" alt="image" src="https://github.com/user-attachments/assets/922680c4-d149-41aa-a9e0-9ee43e3e35a9" />
 
+<img width="1994" height="920" alt="image" src="https://github.com/user-attachments/assets/a505c06d-a30d-4ae8-a728-b70446b8ffc9" />
+
+
 
 ------
 
