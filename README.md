@@ -105,7 +105,7 @@ Use `Projects -> Register your project` in the frontend, then choose one runner:
 
 ----
 
-## Dashboard Update
+## Updated Dashboard
 
 <img width="2556" height="1534" alt="image" src="https://github.com/user-attachments/assets/68a9b54c-c954-48ab-ae8c-de9d1086b86a" />
 
@@ -119,9 +119,14 @@ Use `Projects -> Register your project` in the frontend, then choose one runner:
 
 <img width="2560" height="1510" alt="image" src="https://github.com/user-attachments/assets/27661c88-8bd6-4f0b-a6c1-e6a2ab5348a4" />
 
-<img width="2560" height="1504" alt="image" src="https://github.com/user-attachments/assets/922680c4-d149-41aa-a9e0-9ee43e3e35a9" />
+
 
 <img width="2538" height="1212" alt="image" src="https://github.com/user-attachments/assets/237a5a7c-39ff-4ed1-ba09-62bf6d900d5b" />
+
+<img width="2532" height="1336" alt="image" src="https://github.com/user-attachments/assets/d0343294-f55a-4f60-a6e4-c4390f8b9e0d" />
+
+<img width="2560" height="1504" alt="image" src="https://github.com/user-attachments/assets/922680c4-d149-41aa-a9e0-9ee43e3e35a9" />
+
 
 ------
 
@@ -130,10 +135,6 @@ Use `Projects -> Register your project` in the frontend, then choose one runner:
 Sprint 5 will transform SecureGate AI from an automated DevSecOps pipeline integration platform into a Security Operations & Monitoring Platform by adding enterprise-grade monitoring, alerting, metrics collection, historical analytics, and Grafana dashboards. 
 
 ------
-
-
-<img width="2532" height="1336" alt="image" src="https://github.com/user-attachments/assets/d0343294-f55a-4f60-a6e4-c4390f8b9e0d" />
-
 
 
 
