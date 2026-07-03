@@ -1,143 +1,91 @@
-# SecureGate AI - Sprint 04
+# Sprint 5 Monitoring And Grafana Visualization
 
-SecureGate AI is a DevSecOps report ingestion, security decision, and reporting platform.
+Sprint 5 adds production-style monitoring and visualization for SecureGate AI. The backend exposes Prometheus metrics through `/metrics`, Prometheus scrapes those metrics, and Grafana visualizes the platform security posture. The React dashboard also includes executive KPIs, security summaries, scan score trends, vulnerability trends, pipeline status, latest uploads, reports, and notification health.
 
-Sprint 1 established React, FastAPI, PostgreSQL, SonarQube, Prometheus, Grafana, Docker Compose, and manual tool validation. In Sprint 2, CI/CD executes security tools and sends JSON output to SecureGate AI. The platform does not clone repositories or execute scanners.
+Grafana is available at `http://localhost:3000`. The SecureGate AI Grafana folder now contains one clean dashboard:
 
-## Quick Start
+- `SecureGate AI - Executive Security Dashboard`
 
-```bash
-cd /Users/saimausman/Desktop/securegate-ai
-docker compose up -d --build
-```
+The previous extra Grafana dashboard pages were removed so the folder stays focused and easy to use. The remaining dashboard includes executive security, scan, vulnerability, CI/CD, notification, report, and platform health panels backed by Prometheus.
 
-Frontend: http://localhost:5173  
-Backend and Swagger: http://localhost:8000 and http://localhost:8000/docs  
-PostgreSQL: localhost:5432  
-SonarQube: http://localhost:9000  
-Prometheus: http://localhost:9090  
-Grafana: http://localhost:3000
+Current Grafana setup includes:
 
-## Sprint 2 API
+- Prometheus datasource: `Prometheus` -> `http://prometheus:9090`
+- Provisioned dashboard JSON under `monitoring/grafana/dashboards/`
+- Provisioned dashboard folder under `monitoring/grafana/provisioning/dashboards/`
+- Starter alert rules under `monitoring/grafana/provisioning/alerting/`
+- Datasource cleanup for stale `prometheus-1` entries
 
-Create metadata with `POST /api/v1/scans`. Upload vendor JSON through:
+Grafana folder tabs:
 
-- `POST /api/v1/scans/{scan_id}/gitleaks`
-- `POST /api/v1/scans/{scan_id}/trivy-fs`
-- `POST /api/v1/scans/{scan_id}/trivy-image`
-- `POST /api/v1/scans/{scan_id}/sonarqube`
+- `Dashboards`: contains the main SecureGate AI executive dashboard.
+- `Panels`: reserved for future reusable library panels.
+- `Alert rules`: contains starter rules for critical vulnerabilities, secrets, low security score, rejected deployments, failed scans, backend availability, and frontend availability.
 
-Upgrade an existing Sprint 1 database:
+Grafana's own email alert delivery requires SMTP configuration in Grafana. This is separate from SecureGate AI's application-level Slack and email notifications.
 
-```bash
-docker compose exec -T postgres psql -U securegate -d securegate < database/migrations/002_sprint_2_report_ingestion.sql
-docker compose restart backend
-```
+See `docs/sprint-5-monitoring.md` for detailed Sprint 5 monitoring notes.
 
-Fresh database volumes execute migrations automatically.
+## Future Improvements
 
-## Verification
+Planned improvements for later sprints include:
 
-```bash
-docker compose config --quiet
-python3 -m compileall -q backend/app
-cd frontend && npm run build
-```
+- AI-assisted executive summaries and remediation guidance
+- More advanced master reports for managers and DevOps engineers
+- Grafana dashboard: Project Security Trends
+- Grafana dashboard: Tool-Level Findings
+- Grafana dashboard: CI/CD Health
+- Grafana dashboard: Notification Delivery Health
+- Grafana dashboard: Docker Image Risk
+- Grafana contact points for Slack and email alert delivery
+- More granular drill-down dashboards per project, branch, image, and tool
+- Production deployment hardening and backup/restore documentation
 
-----
+---
 
-## Sprint 3
-
-Sprint 3 calculates a 0-100 security score, records `APPROVED` or `REJECTED` deployment decisions, generates prioritized rule-based recommendations, and stores a canonical master report. Reports are available as PDF, DOCX, and JSON, with 12-month history filters in the dashboard.
-
-```bash
-docker compose exec -T postgres psql -U securegate -d securegate < database/migrations/003_sprint_3_security_decision_engine.sql
-docker compose restart backend
-```
-
-Export endpoints are documented at `http://localhost:8000/docs` under `reports`.
-
-----
-
-Future Enhancement:
-
-Scanner execution, CI workflow files, Jenkins, notifications, LLM recommendations, and monitoring dashboards.
+## SecureGate AI Updated Dasboard
 
 
-## Sprint 4 Workflow Automation
-
-Sprint 4 adds API-key protected GitHub Actions automation, lifecycle tracking, stored report delivery, Slack/SMTP notification history, automatic dashboard refresh, and audit visibility.
-
-Set these variables for automation:
-
-```bash
-SECUREGATE_API_KEY=replace-with-a-long-token
-PUBLIC_BACKEND_URL=http://localhost:8000
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USERNAME=security@example.com
-SMTP_PASSWORD=replace-me
-SMTP_FROM=security@example.com
-```
-
-Pipeline endpoints:
-
-- `POST /api/v1/pipeline/start`
-- `POST /api/v1/pipeline/complete`
-
-Report uploads remain under `POST /api/v1/scans/{scan_id}/{tool}` and now require `Authorization: Bearer <SECUREGATE_API_KEY>` for GitHub Actions automation.
-
-Stored reports are served from `storage/scans/<scan_id>/` through:
-
-- `GET /api/v1/reports/{scan_id}/pdf`
-- `GET /api/v1/reports/{scan_id}/docx`
-- `GET /api/v1/reports/{scan_id}/json`
-
-Detailed Sprint 4 guidance is in `docs/sprint-4/README.md`. Independent runner examples are available at `examples/github-actions/securegate.yml` and `examples/jenkins/Jenkinsfile.securegate`.
+<img width="1280" height="800" alt="Screenshot 2026-07-04 at 1 08 15 AM" src="https://github.com/user-attachments/assets/77937f34-0605-482e-b4f4-8740dc408ee3" />
 
 
-## Project Registry and Health Dashboard
+<img width="1864" height="316" alt="image" src="https://github.com/user-attachments/assets/ee1d8072-9793-43cf-9369-46eb60f0493c" />
 
-SecureGate AI now registers projects with generated IDs such as `PRJ-YYYYMMDD-0001`. A registered project maps to one GitHub repository URL. GitHub Actions still submits `project_name` and `repository_url`; SecureGate AI attaches scans to the matching registered project or creates one automatically if needed, when the scan pipeline runs.
+<img width="2522" height="1508" alt="image" src="https://github.com/user-attachments/assets/20c40b3d-f4e8-4315-be4c-49e9c9ac9a3e" />
 
-Use `Projects -> Register your project` in the frontend, then choose one runner: copy either `examples/github-actions/securegate.yml` or `examples/jenkins/Jenkinsfile.securegate` into the repository pipeline. Do not chain GitHub Actions to Jenkins; both templates perform scanning, Docker image build, image scanning, report upload, dashboard update, notification triggering, and SecureGate decision enforcement independently. When approved and Docker Hub credentials exist, the runner pushes the image, rescans the pushed artifact, and uploads the refreshed image report.
+<img width="2106" height="1090" alt="image" src="https://github.com/user-attachments/assets/a17058f8-a9a7-4fcd-ba99-bd83a351eb6a" />
 
-----
+<img width="1066" height="529" alt="Screenshot 2026-07-04 at 1 11 30 AM" src="https://github.com/user-attachments/assets/20567f2c-0e45-4726-a223-4f8155aac3fc" />
 
-## Updated Dashboard
+---
 
-<img width="2556" height="1534" alt="image" src="https://github.com/user-attachments/assets/68a9b54c-c954-48ab-ae8c-de9d1086b86a" />
+## Graffana Dashboard
 
-<img width="2560" height="1516" alt="image" src="https://github.com/user-attachments/assets/31ed046f-b277-4914-aeee-ff71cf28a857" />
+<img width="2530" height="1518" alt="image" src="https://github.com/user-attachments/assets/7dbeb542-8d54-46b9-824e-84beef00d1c4" />
 
-<img width="2558" height="1522" alt="image" src="https://github.com/user-attachments/assets/6b9c7b97-d2ed-4c40-916d-7d0e05e80374" />
+---
 
-<img width="2560" height="1504" alt="image" src="https://github.com/user-attachments/assets/00168fe3-9001-45a3-8b37-f17620048bc1" />
+## Current Sprint 5 monitoring and Grafana visualization summary
 
-<img width="2560" height="1530" alt="image" src="https://github.com/user-attachments/assets/89ded675-60a7-464b-9b44-d1860936ac56" />
+- Prometheus /metrics flow
+- One clean Grafana dashboard setup
+- Grafana folder tabs explanation: Dashboards, Panels, Alert rules
+- Current datasource and provisioning details
+- Note about Grafana SMTP being separate from SecureGate AI notifications
+- Future Grafana dashboard improvements:Project Security Trends
+- Tool-Level Findings
+- CI/CD Health
+- Notification Delivery Health
+- Docker Image Risk
 
-<img width="2560" height="1510" alt="image" src="https://github.com/user-attachments/assets/27661c88-8bd6-4f0b-a6c1-e6a2ab5348a4" />
+---
+
+NOTE: SPrint-06 will focus on the addition of **AI agent** for Report & Summary generation and Remediation.
+
+---
 
 
 
-<img width="2538" height="1212" alt="image" src="https://github.com/user-attachments/assets/237a5a7c-39ff-4ed1-ba09-62bf6d900d5b" />
-
-<img width="2532" height="1336" alt="image" src="https://github.com/user-attachments/assets/d0343294-f55a-4f60-a6e4-c4390f8b9e0d" />
-
-<img width="2560" height="1504" alt="image" src="https://github.com/user-attachments/assets/922680c4-d149-41aa-a9e0-9ee43e3e35a9" />
-
-<img width="1994" height="920" alt="image" src="https://github.com/user-attachments/assets/a505c06d-a30d-4ae8-a728-b70446b8ffc9" />
-
-
-
-------
-
-## Sprint 05 Implemntation:
-
-Sprint 5 will transform SecureGate AI from an automated DevSecOps pipeline integration platform into a Security Operations & Monitoring Platform by adding enterprise-grade monitoring, alerting, metrics collection, historical analytics, and Grafana dashboards. 
-
-------
 
 
 
