@@ -841,3 +841,16 @@ SecureGate AI is a complete DevSecOps security decision platform that converts C
 The platform's main value is consolidation. It brings secrets, vulnerabilities, code quality, unit tests, Docker image risk, notifications, reports, monitoring, and remediation guidance into one controlled dashboard. This helps teams detect security issues earlier, make consistent deployment decisions, and reduce the time required to understand and fix vulnerabilities.
 
 SecureGate AI is ready as a capstone-grade implementation through Sprint 6 and provides a strong foundation for future enterprise improvements such as RBAC, cloud deployment, deeper Grafana drilldowns, advanced AI remediation, and compliance-oriented reporting.
+
+
+## Author
+
+**Saima Usman** \
+Jr. DevOps + Cloud Engineer \
+HeroVired (PPMCAD-15)
+
+**Capstone Project** \
+Container Image Vulnerability Scanner with Reporting
+
+**Project Name:** \
+SecureGate AI
