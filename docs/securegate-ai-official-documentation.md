@@ -2,10 +2,10 @@
 
 **Document Title:** SecureGate AI DevSecOps Security Decision Platform Documentation  
 **Project:** SecureGate AI  
-**Version:** Sprint 6 Completion  
-**Prepared For:** Capstone Project Evaluation  
-**Prepared By:** SecureGate AI Project Team  
-**Date:** July 31, 2026
+**Version:** Sprint 6 Completionc(V6)
+**Prepared For:** Final Capstone Project Evaluation  
+**Prepared By:** Saima Usman - Jr. Devops Engineer, HeroVired PPMCAD(15)
+**Submission Date:** July 31, 2026
 
 ## Table Of Contents
 
