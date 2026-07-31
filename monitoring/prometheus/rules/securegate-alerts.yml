@@ -1,0 +1,79 @@
+groups:
+  - name: securegate-security-events
+    rules:
+      - alert: CriticalVulnerabilityDetected
+        expr: securegate_critical_vulnerabilities > securegate_critical_vulnerability_threshold
+        labels:
+          severity: CRITICAL
+          category: vulnerability
+        annotations:
+          summary: Critical vulnerabilities exceed the configured threshold.
+          description: SecureGate AI detected critical vulnerabilities. Production deployment must stay blocked until these are fixed or formally accepted.
+          recommendation: Patch the affected package, upgrade the base image or dependency, then rerun the pipeline.
+          runbook_url: https://runbooks.example.com/securegate/critical-vulnerability
+
+      - alert: HighVulnerabilityThresholdReached
+        expr: securegate_high_vulnerabilities > securegate_high_vulnerability_threshold
+        labels:
+          severity: HIGH
+          category: vulnerability
+        annotations:
+          summary: High vulnerabilities are above the configured threshold.
+          description: SecureGate AI detected more high vulnerabilities than allowed by policy.
+          recommendation: Review the top high findings, patch dependencies, and rebuild the image before release.
+          runbook_url: https://runbooks.example.com/securegate/high-vulnerability-threshold
+
+      - alert: SecretsDetected
+        expr: (securegate_secret_detection_required * securegate_secrets_detected) > 0
+        labels:
+          severity: CRITICAL
+          category: secrets
+        annotations:
+          summary: Secrets were detected in the repository scan.
+          description: GitLeaks findings indicate exposed credentials or sensitive values.
+          recommendation: Remove the secret, rotate the credential, and move it to GitHub Secrets or an approved secret manager.
+          runbook_url: https://runbooks.example.com/securegate/secrets
+
+      - alert: SonarQubeQualityGateFailed
+        expr: (securegate_quality_gate_required * securegate_sonarqube_quality_gate_failed_count) > 0
+        labels:
+          severity: HIGH
+          category: code-quality
+        annotations:
+          summary: SonarQube quality gate failed.
+          description: One or more scans reported a failed SonarQube or SonarCloud quality gate.
+          recommendation: Fix quality gate issues such as bugs, maintainability issues, coverage gaps, or security hotspots, then rerun the scan.
+          runbook_url: https://runbooks.example.com/securegate/sonarqube-quality-gate
+
+      - alert: DeploymentBlocked
+        expr: securegate_deployment_rejected_count > 0
+        labels:
+          severity: CRITICAL
+          category: deployment
+        annotations:
+          summary: SecureGate AI blocked deployment.
+          description: At least one scan has a rejected deployment decision.
+          recommendation: Open the master report, fix the blocking findings, and rerun the CI/CD security gate.
+          runbook_url: https://runbooks.example.com/securegate/deployment-blocked
+
+      - alert: MasterReportGenerationFailed
+        expr: securegate_report_generation_failed_count > 0
+        labels:
+          severity: MEDIUM
+          category: reporting
+        annotations:
+          summary: Master report generation failed.
+          description: SecureGate AI could not complete report generation or scan finalization for one or more scans.
+          recommendation: Check backend logs, uploaded JSON report payloads, and storage permissions.
+          runbook_url: https://runbooks.example.com/securegate/report-generation
+
+      - alert: NotificationDeliveryFailed
+        expr: (securegate_slack_notifications_failed + securegate_email_notifications_failed) > 0
+        labels:
+          severity: MEDIUM
+          category: notification
+        annotations:
+          summary: Slack or email notification delivery failed.
+          description: SecureGate AI recorded failed notification delivery attempts.
+          recommendation: Verify Slack webhook, SMTP credentials, network access, and recipient configuration.
+          runbook_url: https://runbooks.example.com/securegate/notification-delivery

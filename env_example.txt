@@ -1,0 +1,33 @@
+# SecureGate AI
+APP_NAME=SecureGate AI
+APP_VERSION=0.4.0
+SECUREGATE_API_KEY=accb16f84c570eb08ec2bd774aeb6d9ca7d91f7b5bbdfc6ea04e5a2a36ef634c
+
+# Use your ngrok/public URL for SecureGate backend port 8000
+PUBLIC_BACKEND_URL=<public_instance_url:8000> #-> http://localhost:8000
+
+# Database
+DATABASE_URL=postgresql://securegate:securegate_password@postgres:5432/securegate
+
+# Storage
+STORAGE_ROOT=storage
+
+# Slack
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/T0B3D..............
+# Email SMTP
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=yourid@gmail.com
+SMTP_PASSWORD=your SMTP PASSWORD
+SMTP_FROM=yourid@gmail.com
+
+# Frontend
+VITE_APP_NAME=SecureGate AI
+VITE_API_BASE_URL=http://localhost:8000
+
+# SonarQube
+
+SONAR_HOST_URL=https://sonarcloud.io
+SONAR_TOKEN=your-sonarqube-token
+SONAR_PROJECT_KEY=your-sonarqube-project-key
+SONAR_ORGANIZATION= your SONAR ORGANIZATION

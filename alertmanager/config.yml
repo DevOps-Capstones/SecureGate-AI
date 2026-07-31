@@ -1,0 +1,35 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: securegate-dashboard-slack
+  group_by: [alertname, severity, category]
+  group_wait: 20s
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - matchers:
+        - severity=~"CRITICAL|HIGH"
+      receiver: securegate-critical-high
+      continue: false
+    - matchers:
+        - severity=~"MEDIUM|LOW|INFO"
+      receiver: securegate-dashboard-slack
+      continue: false
+
+receivers:
+  - name: securegate-critical-high
+    webhook_configs:
+      - url: http://backend:8000/api/v1/alerts/webhook-placeholder
+        send_resolved: true
+  - name: securegate-dashboard-slack
+    webhook_configs:
+      - url: http://backend:8000/api/v1/alerts/webhook-placeholder
+        send_resolved: true
+
+inhibit_rules:
+  - source_matchers:
+      - severity="CRITICAL"
+    target_matchers:
+      - severity="HIGH"
+    equal: [alertname, category]

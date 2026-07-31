@@ -1,0 +1,8 @@
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS security_score INTEGER;
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS deployment_decision VARCHAR(20) NOT NULL DEFAULT 'PENDING';
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS sonar_quality_gate VARCHAR(30) NOT NULL DEFAULT 'UNKNOWN';
+ALTER TABLE scans ADD COLUMN IF NOT EXISTS evaluated_at TIMESTAMPTZ;
+ALTER TABLE reports ADD COLUMN IF NOT EXISTS payload JSONB NOT NULL DEFAULT '{}'::jsonb;
+
+CREATE INDEX IF NOT EXISTS idx_reports_created_at ON reports(created_at);
+CREATE INDEX IF NOT EXISTS idx_scans_decision ON scans(deployment_decision);

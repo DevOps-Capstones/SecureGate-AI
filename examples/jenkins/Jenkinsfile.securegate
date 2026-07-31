@@ -1,0 +1,263 @@
+pipeline {
+  agent any
+
+  environment {
+    SECUREGATE_URL = credentials('securegate-url')
+    SECUREGATE_API_KEY = credentials('securegate-api-key')
+    PROJECT_NAME = 'replace-with-registered-project-name'
+    REPOSITORY_URL = 'https://github.com/company/repository'
+    SONAR_HOST_URL = credentials('sonar-host-url')
+    SONAR_TOKEN = credentials('sonar-token')
+    SONAR_PROJECT_KEY = 'replace-with-sonar-project-key'
+    SONAR_ORGANIZATION = 'replace-with-sonar-organization'
+    DOCKERHUB_USERNAME = ''
+    DOCKERHUB_TOKEN = ''
+  }
+
+  stages {
+    stage('Start SecureGate Scan') {
+      steps {
+        script {
+          def response = sh(
+            script: '''curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/pipeline/start" \
+              -H "Authorization: Bearer $SECUREGATE_API_KEY" \
+              -H "Content-Type: application/json" \
+              -d "{\"project_name\":\"$PROJECT_NAME\",\"repository_url\":\"$REPOSITORY_URL\",\"branch\":\"$BRANCH_NAME\",\"commit_sha\":\"$GIT_COMMIT\",\"pipeline_run_id\":\"$BUILD_NUMBER\"}"''',
+            returnStdout: true
+          ).trim()
+          env.SECUREGATE_SCAN_ID = sh(script: "printf '%s' '${response}' | jq -r .scan_id", returnStdout: true).trim()
+        }
+      }
+    }
+
+    stage('GitLeaks Secret Scan') {
+      steps {
+        sh '''
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest detect \
+            --source=/repo \
+            --report-format=json \
+            --report-path=/repo/gitleaks-report.json \
+            --no-git || true
+          test -f gitleaks-report.json || echo '[]' > gitleaks-report.json
+        '''
+      }
+    }
+
+    stage('Semgrep SAST Scan') {
+      steps {
+        sh '''
+          docker run --rm -v "$PWD:/src" returntocorp/semgrep:latest semgrep scan --config auto --json --output /src/semgrep-report.json /src || true
+          test -f semgrep-report.json || echo '{"results":[]}' > semgrep-report.json
+        '''
+      }
+    }
+
+    stage('Trivy Filesystem Scan') {
+      steps {
+        sh '''
+          docker run --rm -v "$PWD:/repo" aquasec/trivy:latest fs /repo \
+            --format json \
+            --output /repo/trivy-fs-report.json \
+            --exit-code 0
+          test -f trivy-fs-report.json || echo '{"Results":[]}' > trivy-fs-report.json
+        '''
+      }
+    }
+
+    stage('SonarQube Quality Gate') {
+      steps {
+        sh '''
+          if [ -z "$SONAR_HOST_URL" ] || [ -z "$SONAR_TOKEN" ] || [ -z "$SONAR_PROJECT_KEY" ] || [ -z "$SONAR_ORGANIZATION" ]; then
+            echo '{"projectStatus":{"status":"UNKNOWN"},"issues":[]}' > sonarqube-report.json
+            exit 0
+          fi
+
+          docker run --rm -e SONAR_HOST_URL="$SONAR_HOST_URL" -e SONAR_TOKEN="$SONAR_TOKEN" -v "$PWD:/usr/src" sonarsource/sonar-scanner-cli:latest \
+            -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
+            -Dsonar.organization="$SONAR_ORGANIZATION" \
+            -Dsonar.sources=. \
+            -Dsonar.exclusions=.github/workflows/securegate.yml,.github/workflows/securegate-ai.yml,SecureGate.Dockerfile
+
+          curl -sS -H "Authorization: Bearer $SONAR_TOKEN" \
+            "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY&organization=$SONAR_ORGANIZATION" \
+            -o sonar-gate.json
+
+          curl -sS -H "Authorization: Bearer $SONAR_TOKEN" \
+            "$SONAR_HOST_URL/api/issues/search?componentKeys=$SONAR_PROJECT_KEY&organization=$SONAR_ORGANIZATION&resolved=false&ps=500" \
+            -o sonar-issues.json
+
+          jq -n --slurpfile gate sonar-gate.json --slurpfile issues sonar-issues.json \
+            '{projectStatus: $gate[0].projectStatus, issues: ($issues[0].issues // [])}' \
+            > sonarqube-report.json
+        '''
+      }
+    }
+
+    stage('Detect And Run Unit Tests') {
+      steps {
+        sh '''
+          STATUS="SKIPPED"; FRAMEWORK="none"; REASON="No supported unit test configuration found"; TOTAL=0; FAILED=0
+          if [ -f package.json ] && jq -e '.scripts.test and .scripts.test != ""' package.json >/dev/null 2>&1; then
+            FRAMEWORK="node"
+            if npm test; then STATUS="PASSED"; REASON="Node test script passed"; else STATUS="FAILED"; REASON="Node test script failed"; FAILED=1; fi
+          elif [ -d tests ] || [ -f pytest.ini ] || grep -q "pytest" pyproject.toml setup.cfg 2>/dev/null; then
+            FRAMEWORK="pytest"
+            python -m pip install --upgrade pip >/dev/null 2>&1 || true
+            [ -f requirements.txt ] && python -m pip install -r requirements.txt >/dev/null 2>&1 || true
+            [ -f requirements-dev.txt ] && python -m pip install -r requirements-dev.txt >/dev/null 2>&1 || true
+            python -m pip install pytest >/dev/null 2>&1 || true
+            if python -m pytest; then STATUS="PASSED"; REASON="pytest passed"; else STATUS="FAILED"; REASON="pytest failed"; FAILED=1; fi
+          fi
+          jq -n --arg status "$STATUS" --arg framework "$FRAMEWORK" --arg reason "$REASON" --argjson total "$TOTAL" --argjson failed "$FAILED" \
+            '{status:$status, framework:$framework, reason:$reason, total:$total, failed:$failed}' > unit-tests-report.json
+        '''
+      }
+    }
+
+    stage('Prepare Dockerfile When Missing') {
+      steps {
+        script {
+          env.SECUREGATE_DOCKERFILE = fileExists('Dockerfile') ? 'Dockerfile' : 'SecureGate.Dockerfile'
+        }
+        sh '''
+          if [ -f Dockerfile ]; then
+            echo "Using repository Dockerfile."
+            exit 0
+          fi
+
+          echo "No Dockerfile found. Creating SecureGate.Dockerfile for image scanning."
+          if [ -f package.json ]; then
+            cat > SecureGate.Dockerfile <<'EOF'
+FROM node:24-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "start"]
+EOF
+          elif [ -f requirements.txt ]; then
+            cat > SecureGate.Dockerfile <<'EOF'
+FROM python:3.12-alpine
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+COPY . .
+CMD ["python", "app.py"]
+EOF
+          else
+            cat > SecureGate.Dockerfile <<'EOF'
+FROM alpine:3.20
+WORKDIR /app
+COPY . .
+CMD ["sh", "-c", "ls -la /app && sleep 30"]
+EOF
+          fi
+        '''
+      }
+    }
+
+    stage('Build And Scan Docker Image') {
+      steps {
+        script {
+          env.IMAGE_REPO_NAME = sh(script: '''echo "$JOB_NAME" | tr '[:upper:]' '[:lower:]' | tr '/' '-' ''', returnStdout: true).trim()
+          env.IMAGE_NAMESPACE = env.DOCKERHUB_USERNAME?.trim() ? env.DOCKERHUB_USERNAME.trim() : 'securegate'
+          env.SHORT_COMMIT_SHA = env.GIT_COMMIT.take(8)
+          env.IMAGE_REF = "${env.IMAGE_NAMESPACE}/${env.IMAGE_REPO_NAME}:${env.SHORT_COMMIT_SHA}"
+          env.IMAGE_LATEST_REF = "${env.IMAGE_NAMESPACE}/${env.IMAGE_REPO_NAME}:latest"
+          echo "SecureGate AI Docker image path: ${env.IMAGE_REF}"
+          echo "Docker Hub repository will be created automatically on first push when credentials allow it: ${env.IMAGE_NAMESPACE}/${env.IMAGE_REPO_NAME}"
+        }
+        sh '''
+          docker build -f "$SECUREGATE_DOCKERFILE" -t "$IMAGE_REF" .
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:/repo" aquasec/trivy:latest image "$IMAGE_REF" \
+            --format json \
+            --output /repo/trivy-image-report.json \
+            --exit-code 0
+          test -f trivy-image-report.json || echo '{"Results":[]}' > trivy-image-report.json
+        '''
+      }
+    }
+
+    stage('Upload Reports To SecureGate AI') {
+      steps {
+        sh '''
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/gitleaks" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @gitleaks-report.json
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/semgrep" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @semgrep-report.json
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/trivy-fs" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @trivy-fs-report.json
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/trivy-image" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @trivy-image-report.json
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/sonarqube" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @sonarqube-report.json
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/unit-tests" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @unit-tests-report.json
+        '''
+      }
+    }
+
+    stage('Read SecureGate Decision') {
+      steps {
+        script {
+          def response = sh(script: 'curl -fsS "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID"', returnStdout: true).trim()
+          echo response
+          env.SECUREGATE_DECISION = sh(script: "printf '%s' '${response}' | jq -r .deployment_decision", returnStdout: true).trim()
+          env.SECUREGATE_SCORE = sh(script: "printf '%s' '${response}' | jq -r .security_score", returnStdout: true).trim()
+          echo "SecureGate AI Decision: ${env.SECUREGATE_DECISION}"
+          echo "Security Score: ${env.SECUREGATE_SCORE}"
+          if (env.SECUREGATE_DECISION != 'APPROVED') {
+            error('SecureGate AI rejected this build.')
+          }
+          echo 'The code is safe to deploy the Docker image and push it to Docker Hub.'
+          echo 'Repository, filesystem, image, secrets, and Sonar quality checks passed SecureGate AI policy.'
+        }
+      }
+    }
+
+    stage('Push Approved Docker Image') {
+      when {
+        expression { return env.DOCKERHUB_USERNAME?.trim() && env.DOCKERHUB_TOKEN?.trim() }
+      }
+      steps {
+        sh '''
+          echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          if docker manifest inspect "$IMAGE_REF" >/dev/null 2>&1; then
+            echo "Image already exists on Docker Hub for this commit. Push skipped."
+            exit 0
+          fi
+          docker tag "$IMAGE_REF" "$IMAGE_LATEST_REF"
+          docker push "$IMAGE_REF"
+          docker push "$IMAGE_LATEST_REF"
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:/repo" aquasec/trivy:latest image "$IMAGE_REF" \
+            --format json \
+            --output /repo/trivy-image-report.json \
+            --exit-code 0
+          curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/scans/$SECUREGATE_SCAN_ID/trivy-image" \
+            -H "Authorization: Bearer $SECUREGATE_API_KEY" -H "Content-Type: application/json" --data-binary @trivy-image-report.json
+          echo "Docker image pushed, rescanned, and SecureGate AI dashboard updated:"
+          echo "  $IMAGE_REF"
+          echo "  $IMAGE_LATEST_REF"
+        '''
+      }
+    }
+  }
+
+  post {
+    always {
+      script {
+        if (env.SECUREGATE_SCAN_ID?.trim()) {
+          def finalStatus = currentBuild.currentResult == 'SUCCESS' ? 'SUCCESS' : 'FAILED'
+          withEnv(["SECUREGATE_FINAL_STATUS=${finalStatus}"]) {
+            sh '''
+              curl -fsS -X POST "${SECUREGATE_URL%/}/api/v1/pipeline/complete" \
+                -H "Authorization: Bearer $SECUREGATE_API_KEY" \
+                -H "Content-Type: application/json" \
+                -d "{\"scan_id\":\"$SECUREGATE_SCAN_ID\",\"status\":\"$SECUREGATE_FINAL_STATUS\"}" || true
+            '''
+          }
+        }
+      }
+    }
+  }
+}
