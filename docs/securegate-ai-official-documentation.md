@@ -9,29 +9,29 @@
 
 ## Table Of Contents
 
-1. Introduction
-2. Scope
-3. Audience
-4. Acknowledgement
-5. Business Aspect
-6. Business Problem
-7. Business Value
-8. Architectural Overview
-9. Operating Model
-10. Tools And Technologies
-11. Security Gate Policy
-12. Data Model And Storage
-13. Reports And Documentation Outputs
-14. AI Assistant And Remediation Engine
-15. Alerts, Notifications, And Summary Jobs
-16. Monitoring And Visualization
-17. Deployment
-18. CI/CD Manifests
-19. Configuration Reference
-20. Validation
-21. Operational Runbook
-22. References
-23. Summary
+1. [Introduction](#introduction)
+2. [Scope](#scope)
+3. [Audience](#audience)
+4. [Acknowledgement](#acknowledgement)
+5. [Business Aspect](#business-aspect)
+6. [Business Problem](#business-problem)
+7. [Business Value](#business-value)
+8. [Architectural Overview](#architectural-overview)
+9. [Operating Model](#operating-model)
+10. [Tools And Technologies](#tools-and-technologies)
+11. [Security Gate Policy](#security-gate-policy)
+12. [Data Model And Storage](#data-model-and-storage)
+13. [Reports And Documentation Outputs](#reports-and-documentation-outputs)
+14. [AI Assistant And Remediation Engine](#ai-assistant-and-remediation-engine)
+15. [Alerts, Notifications, And Summary Jobs](#alerts-notifications-and-summary-jobs)
+16. [Monitoring And Visualization](#monitoring-and-visualization)
+17. [Deployment](#deployment)
+18. [CI/CD Manifests](#cicd-manifests)
+19. [Configuration Reference](#configuration-reference)
+20. [Validation](#validation)
+21. [Operational Runbook](#operational-runbook)
+22. [References](#references)
+23. [Summary](#summary)
 
 ## Introduction
 
@@ -841,7 +841,6 @@ SecureGate AI is a complete DevSecOps security decision platform that converts C
 The platform's main value is consolidation. It brings secrets, vulnerabilities, code quality, unit tests, Docker image risk, notifications, reports, monitoring, and remediation guidance into one controlled dashboard. This helps teams detect security issues earlier, make consistent deployment decisions, and reduce the time required to understand and fix vulnerabilities.
 
 SecureGate AI is ready as a capstone-grade implementation through Sprint 6 and provides a strong foundation for future enterprise improvements such as RBAC, cloud deployment, deeper Grafana drilldowns, advanced AI remediation, and compliance-oriented reporting.
-
 
 ## Author
 
