@@ -1,0 +1,85 @@
+SecureGate AI - License And Ownership Notice
+
+Copyright (c) 2026 Saima Usman.
+All Rights Reserved.
+
+Project Name: SecureGate AI
+Author / Owner: Saima Usman
+Role: Jr. DevOps Engineer
+Program / Cohort: HeroVired PPMCAD(15)
+Project Type: Final Capstone Project
+Submission Date: July 31, 2026
+
+1. Ownership
+
+SecureGate AI, including its source code, documentation, dashboard design,
+configuration files, reports, workflows, examples, and project-specific assets,
+is owned by Saima Usman unless otherwise stated.
+
+This repository was created as a final capstone project to demonstrate an
+enterprise DevSecOps security decision platform with CI/CD report ingestion,
+security scoring, report generation, monitoring, alerts, notifications, and
+AI-assisted remediation.
+
+2. Permitted Use
+
+This project may be viewed, reviewed, cloned, or executed only for the following
+purposes:
+
+- Academic evaluation.
+- Capstone demonstration.
+- Portfolio review.
+- Learning and non-commercial reference.
+- Instructor, mentor, or evaluator assessment.
+
+3. Restrictions
+
+Without prior written permission from the owner, you may not:
+
+- Sell, sublicense, redistribute, or commercially exploit this project.
+- Publish modified versions as your own work.
+- Remove ownership, copyright, or attribution notices.
+- Use this project in a production environment as-is.
+- Use the SecureGate AI name, branding, documentation, or dashboard design for a
+  separate commercial product.
+
+4. No Warranty
+
+This project is provided for educational and demonstration purposes only.
+It is provided "as is", without warranty of any kind, express or implied,
+including but not limited to warranties of merchantability, fitness for a
+particular purpose, and non-infringement.
+
+The owner is not liable for any claim, damages, security issue, data loss,
+misconfiguration, deployment failure, or other liability arising from use of this
+project.
+
+5. Third-Party Tools And Dependencies
+
+SecureGate AI integrates with or references third-party tools and technologies,
+including but not limited to FastAPI, React, PostgreSQL, Docker, GitHub Actions,
+Jenkins, GitLeaks, Semgrep, Trivy, SonarQube/SonarCloud, Prometheus, Grafana,
+Alertmanager, Slack, SMTP email services, Ollama, and Gemma.
+
+Each third-party tool, library, image, or dependency remains governed by its own
+license terms. This license does not grant additional rights to those
+third-party components.
+
+6. Secrets And Credentials
+
+This repository must not include real API keys, tokens, passwords, Slack webhook
+URLs, SMTP passwords, GitHub tokens, Docker Hub tokens, Sonar tokens, or other
+sensitive credentials. Use environment variables and CI/CD secret stores.
+
+7. Attribution
+
+When referencing this project in academic or portfolio contexts, use the
+following attribution:
+
+SecureGate AI - Final Capstone Project by Saima Usman, Jr. DevOps Engineer,
+HeroVired PPMCAD(15), 2026.
+
+8. Contact And Permission
+
+For permission to reuse, redistribute, publish, or adapt this project beyond the
+permitted use listed above, contact the project owner.
