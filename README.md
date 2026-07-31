@@ -1,92 +1,318 @@
-# Sprint 5 Monitoring And Grafana Visualization
+# Sprint 6 - Local AI Assistant And Remediation Engine
 
-Sprint 5 adds production-style monitoring and visualization for SecureGate AI. The backend exposes Prometheus metrics through `/metrics`, Prometheus scrapes those metrics, and Grafana visualizes the platform security posture. The React dashboard also includes executive KPIs, security summaries, scan score trends, vulnerability trends, pipeline status, latest uploads, reports, and notification health.
+Sprint 6 completes SecureGate AI by adding local AI-assisted security guidance on top of the existing DevSecOps decision platform.
 
-Grafana is available at `http://localhost:3000`. The SecureGate AI Grafana folder now contains one clean dashboard:
+SecureGate AI still keeps the locked architecture:
 
-- `SecureGate AI - Executive Security Dashboard`
+- CI/CD runs the scanners.
+- SecureGate AI receives reports.
+- SecureGate AI normalizes findings.
+- SecureGate AI calculates score and decision.
+- SecureGate AI generates reports, dashboards, notifications, alerts, and AI remediation guidance.
 
-The previous extra Grafana dashboard pages were removed so the folder stays focused and easy to use. The remaining dashboard includes executive security, scan, vulnerability, CI/CD, notification, report, and platform health panels backed by Prometheus.
+## Sprint 6 Goal
 
-Current Grafana setup includes:
+Transform SecureGate AI from a security reporting dashboard into an AI-assisted remediation workspace.
 
-- Prometheus datasource: `Prometheus` -> `http://prometheus:9090`
-- Provisioned dashboard JSON under `monitoring/grafana/dashboards/`
-- Provisioned dashboard folder under `monitoring/grafana/provisioning/dashboards/`
-- Starter alert rules under `monitoring/grafana/provisioning/alerting/`
-- Datasource cleanup for stale `prometheus-1` entries
+Sprint 6 adds:
 
-Grafana folder tabs:
+- Local Ollama/Gemma integration
+- Ask AI Assistant widget
+- AI Summary on dashboard and project pages
+- AI Security Summary PDF
+- AI Remediation Plan JSON and PDF
+- P1-P7 remediation priority model
+- Estimated fix time
+- Production readiness checklist
+- Rule-based fallback when Ollama is unavailable
+- Audit logs for AI actions
 
-- `Dashboards`: contains the main SecureGate AI executive dashboard.
-- `Panels`: reserved for future reusable library panels.
-- `Alert rules`: contains starter rules for critical vulnerabilities, secrets, low security score, rejected deployments, failed scans, backend availability, and frontend availability.
+## Why This Matters
 
-Grafana's own email alert delivery requires SMTP configuration in Grafana. This is separate from SecureGate AI's application-level Slack and email notifications.
+Security tools often tell developers what failed, but not what to do next. Sprint 6 closes that gap by translating scan findings into practical remediation guidance.
 
-See `docs/sprint-5-monitoring.md` for detailed Sprint 5 monitoring notes.
+The developer can ask:
 
-## Future Improvements
+- Why did the latest scan fail?
+- What should I fix first?
+- What files are affected?
+- Is the project ready for deployment?
+- How long might remediation take?
 
-Planned improvements for later sprints include:
+SecureGate AI answers using stored scan data and local AI guidance.
 
-- AI-assisted executive summaries and remediation guidance
-- More advanced master reports for managers and DevOps engineers
-- Grafana dashboard: Project Security Trends
-- Grafana dashboard: Tool-Level Findings
-- Grafana dashboard: CI/CD Health
-- Grafana dashboard: Notification Delivery Health
-- Grafana dashboard: Docker Image Risk
-- Grafana contact points for Slack and email alert delivery
-- More granular drill-down dashboards per project, branch, image, and tool
-- Production deployment hardening and backup/restore documentation
+## AI Architecture
 
----
+```text
+Scan reports stored in PostgreSQL and storage/
+        |
+Scan context builder
+        |
+Deterministic security summary and remediation rules
+        |
+Optional Ollama/Gemma prompt
+        |
+AI Summary JSON + PDF
+AI Remediation Plan JSON + PDF
+AI Assistant chat response
+        |
+Audit log entry
+```
 
-## SecureGate AI Updated Dasboard
+Ollama improves explanation quality, but it is not required for the platform to work. If Ollama or Gemma is unavailable, SecureGate AI returns rule-based guidance.
 
+## Setup Commands
 
-<img width="1280" height="800" alt="Screenshot 2026-07-04 at 1 08 15 AM" src="https://github.com/user-attachments/assets/77937f34-0605-482e-b4f4-8740dc408ee3" />
+Start all services:
 
+```bash
+cd /Users/saimausman/Desktop/securegate-ai
+docker compose up -d --build
+```
 
-<img width="1864" height="316" alt="image" src="https://github.com/user-attachments/assets/ee1d8072-9793-43cf-9369-46eb60f0493c" />
+Pull the model once:
 
-<img width="2522" height="1508" alt="image" src="https://github.com/user-attachments/assets/20c40b3d-f4e8-4315-be4c-49e9c9ac9a3e" />
+```bash
+docker compose exec ollama ollama pull gemma3:4b
+```
 
-<img width="2106" height="1090" alt="image" src="https://github.com/user-attachments/assets/a17058f8-a9a7-4fcd-ba99-bd83a351eb6a" />
+Check available models:
 
-<img width="1066" height="529" alt="Screenshot 2026-07-04 at 1 11 30 AM" src="https://github.com/user-attachments/assets/20567f2c-0e45-4726-a223-4f8155aac3fc" />
+```bash
+docker compose exec ollama ollama list
+```
 
----
+Restart backend after environment changes:
 
-## Graffana Dashboard
+```bash
+docker compose restart backend
+```
 
-<img width="2530" height="1518" alt="image" src="https://github.com/user-attachments/assets/7dbeb542-8d54-46b9-824e-84beef00d1c4" />
+View AI/Ollama logs:
 
----
+```bash
+docker compose logs -f ollama
+docker compose logs -f backend
+```
 
-## Current Sprint 5 monitoring and Grafana visualization summary
+Run backend and frontend validation:
 
-- Prometheus /metrics flow
-- One clean Grafana dashboard setup
-- Grafana folder tabs explanation: Dashboards, Panels, Alert rules
-- Current datasource and provisioning details
-- Note about Grafana SMTP being separate from SecureGate AI notifications
-- Future Grafana dashboard improvements:Project Security Trends
-- Tool-Level Findings
-- CI/CD Health
-- Notification Delivery Health
-- Docker Image Risk
+```bash
+python3 -m compileall -q backend/app
+cd frontend
+npm run build
+```
 
----
+## Environment Variables
 
-NOTE: SPrint-06 will focus on the addition of **AI agent** for Report & Summary generation and Remediation.
+Add these to `/Users/saimausman/Desktop/securegate-ai/.env`:
 
----
+```bash
+AI_ENABLED=true
+OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_MODEL=gemma3:4b
+OLLAMA_TIMEOUT_SECONDS=300
+```
 
+Important related variables:
 
+```bash
+SECUREGATE_API_KEY=replace-with-a-long-token
+PUBLIC_BACKEND_URL=http://localhost:8000
+SECURITY_SCORE_THRESHOLD=80
+BLOCK_HIGH_VULNERABILITIES=true
+QUALITY_GATE_REQUIRED=true
+SECRET_DETECTION_REQUIRED=true
+```
 
+## Sprint 6 API Endpoints
 
+AI insight summary:
 
+```bash
+curl -fsS http://localhost:8000/api/v1/ai/scans/SCAN-ID/insights
+```
 
+Ask AI assistant:
 
+```bash
+curl -fsS -X POST http://localhost:8000/api/v1/ai/scans/SCAN-ID/chat \
+  -H "Content-Type: application/json" \
+  -d '{"question":"Why did the latest scan fail?"}'
+```
+
+Get remediation plan JSON:
+
+```bash
+curl -fsS http://localhost:8000/api/v1/ai/scans/SCAN-ID/remediation-plan
+```
+
+Download AI summary PDF:
+
+```bash
+curl -L http://localhost:8000/api/v1/ai/scans/SCAN-ID/summary-report/pdf -o ai-summary.pdf
+```
+
+Download AI remediation plan PDF:
+
+```bash
+curl -L http://localhost:8000/api/v1/ai/scans/SCAN-ID/remediation-plan/pdf -o ai-remediation-plan.pdf
+```
+
+Replace `SCAN-ID` with a real value such as `SCAN-20260705-0002`.
+
+## Frontend Usage
+
+Dashboard:
+
+- Open `http://localhost:5173`
+- Review AI Summary section.
+- Click AI Summary PDF or AI Remediation PDF.
+- Use Ask AI Assistant for scan questions.
+
+Project page:
+
+- Open `Projects`.
+- Select a project.
+- Review Security Summary, Findings, Pipeline Timeline, and AI Remediation Plan.
+- Use `Ask AI` to open the assistant with project context.
+
+Remediation Plan page:
+
+- Open `http://localhost:5173/remediation-plan`
+- Choose any completed scan/project.
+- Review priority matrix, fix details, readiness checklist, and download PDF.
+
+## P1-P7 Priority Logic
+
+SecureGate AI uses priority levels to guide remediation order.
+
+| Priority | Meaning | Fix Timing |
+| --- | --- | --- |
+| P1 | Emergency production blocker | Fix immediately before any deployment |
+| P2 | Critical security blocker | Fix before release |
+| P3 | Quality gate or policy blocker | Fix before release approval |
+| P4 | Critical CVE or major dependency issue | Fix before production deployment |
+| P5 | High vulnerability or high-risk finding | Fix quickly; deployment usually blocked by strict policy |
+| P6 | Important security hygiene or code quality work | Fix soon to maintain project health |
+| P7 | Medium/low technical debt or next-cycle remediation | Fix in next remediation cycle, still track until resolved |
+
+Examples:
+
+- GitLeaks secret finding: usually P1 or P2.
+- Critical Trivy CVE: usually P2 or P4.
+- Failed SonarQube quality gate: usually P3.
+- High Semgrep finding: usually P5.
+- Medium Semgrep issue such as Flask debug mode: often P7 when no higher blocker exists.
+
+P7 does not mean safe to ignore. It means lower urgency compared with P1-P6.
+
+## AI Remediation Plan Contents
+
+The remediation plan includes:
+
+- Project name
+- Repository link
+- Branch
+- Scan ID
+- Security score
+- Deployment decision
+- Overall priority
+- Estimated fix time
+- Severity counts
+- Top actions
+- Fix details
+- Production readiness checklist
+- Final recommendation
+
+The PDF is intentionally concise so a developer can quickly understand what to fix.
+
+## AI Summary Report Contents
+
+The AI Summary PDF includes:
+
+- Project metadata
+- Repository link
+- Branch
+- Uploaded/generated time
+- Security score
+- Deployment decision
+- AI readiness
+- Overall risk
+- Executive summary
+- AI analysis without raw markdown symbols
+- Top recommendations
+- Estimated fix time
+
+The project name is emphasized, and rejected decisions are highlighted in red.
+
+## Fallback Behavior
+
+If Ollama is unavailable:
+
+- The dashboard still loads.
+- The AI assistant still responds using stored scan data.
+- AI reports still generate deterministic guidance.
+- The app records audit logs showing fallback usage.
+
+Common model setup fix:
+
+```bash
+docker compose exec ollama ollama pull gemma3:4b
+docker compose restart backend
+```
+
+## Testing Commands
+
+Backend compile:
+
+```bash
+python3 -m compileall -q backend/app
+```
+
+Frontend build:
+
+```bash
+cd frontend
+npm run build
+```
+
+Health check:
+
+```bash
+curl -fsS http://localhost:8000/health
+```
+
+AI endpoint check:
+
+```bash
+curl -fsS http://localhost:8000/api/v1/ai/scans/SCAN-ID/insights
+```
+
+## Sprint 6 Deliverables
+
+Completed:
+
+- Ollama service in Docker Compose
+- Gemma model configuration
+- AI backend services
+- AI API routes
+- AI Assistant frontend widget
+- AI Summary dashboard section
+- AI Remediation Plan page
+- AI Summary PDF export
+- AI Remediation PDF export
+- P1-P7 priority logic
+- Rule-based fallback
+- Audit logging
+- Final project documentation
+
+## Production Notes
+
+For production:
+
+- Use a dedicated AI model host if Ollama needs more CPU/GPU resources.
+- Keep AI output advisory; security gate rules remain authoritative.
+- Review generated remediation guidance before deployment.
+- Protect report downloads behind authentication in a real enterprise deployment.
+- Back up PostgreSQL and `storage/` reports.
