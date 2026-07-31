@@ -57,6 +57,11 @@ SecureGate AI normalizes findings, scores the scan, decides APPROVED or REJECTED
 Dashboard, reports, notifications, Grafana metrics, AI summary, remediation plan
 ```
 
+<img width="1408" height="768" alt="image" src="https://github.com/user-attachments/assets/73c61f8b-1422-4707-9822-c1ae6cadf242" />
+
+<br>
+<br>
+
 SecureGate AI does **not** clone repositories or run scanners itself. The CI/CD runner performs scanning and uploads results to SecureGate AI.
 
 ## Technology Stack
