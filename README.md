@@ -6,7 +6,7 @@ The project is complete through Sprint 6.
 
 ## Official Documentation
 
-The formal project documentation is available at `docs/securegate-ai-official-documentation.md`. It includes business context, architecture, deployment, configuration, validation, monitoring, alerts, AI remediation, and references.
+The formal project documentation is available at [SecureGate AI Official Documentation](docs/securegate-ai-official-documentation.md). It includes business context, architecture, deployment, configuration, validation, monitoring, alerts, AI remediation, and references.
 
 ## Unique Selling Proposition
 
