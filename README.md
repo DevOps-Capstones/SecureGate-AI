@@ -504,3 +504,15 @@ Before production use:
 ## License And Ownership
 
 SecureGate AI is a capstone DevSecOps project demonstrating secure CI/CD report ingestion, decisioning, visualization, notification, and AI-assisted remediation.
+
+## Author
+
+**Saima Usman** \
+Jr. DevOps + Cloud Engineer \
+HeroVired (PPMCAD-15)
+
+**Capstone Project** \
+Container Image Vulnerability Scanner with Reporting
+
+**Project Name:** \
+SecureGate AI
