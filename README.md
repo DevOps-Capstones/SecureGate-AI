@@ -54,13 +54,13 @@ Default `Grafana` credentials:
 
 - Username: `admin`
 - Password: `admin`
-- New Password `admin123`
+- New Password `********`
 
 Default `SonarQube` credentials:
 
 - Username: `admin`
 - Password: `admin`
-- New Password `admin123`
+- New Password `********`
 
 
 SonarQube may require a password change on first login.
