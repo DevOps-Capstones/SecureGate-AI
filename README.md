@@ -105,7 +105,7 @@ npm run build
 
 ## Environment Variables
 
-Add these to `/Users/saimausman/Desktop/securegate-ai/.env`:
+Add these to `securegate-ai/.env`:
 
 ```bash
 AI_ENABLED=true
